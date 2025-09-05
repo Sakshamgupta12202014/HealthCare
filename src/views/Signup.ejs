@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <div class="signup-container">
+            <div class="signup-box">
+            <h2>Create Account</h2>
+
+            <form action="/api/auth/register" method="POST" class="signup-form">
+                <input name="name" type="text" placeholder="Type your name..." />
+                <input name="email" type="email" placeholder="Type your email..." />
+                <input name="password" type="password" placeholder="Type your password..." />
+                <select name="role" required>
+                    <option value="">Select role</option>
+                    <option value="admin">Admin</option>
+                    <option value="patient">Patient</option>
+                    <option value="doctor">Doctor</option>
+                </select>
+                <button type="submit">Register</button>
+            </form>
+      </div>
+    </div>
+</body>
+</html>

@@ -10,6 +10,4 @@ router.get("/:patientId", authMiddleware, handleGetPatientById); // admin and th
 router.post("/:patientId", authMiddleware, handleUpdatePatientById);  // admin and the patient himself
 router.delete("/:patientId", authMiddleware, handleDeletePatientById);  // admin and the patient himself
 
-router.post("/admin/register-patient", authMiddleware, adminRegisterPatient);
-
 export default router;

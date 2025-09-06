@@ -62,6 +62,7 @@ export async function adminRegisterDoctor(req, res) {
         }
 
         return res.status(200).json({
+            message: "Doctor registered successfully",
             doctor: doctor?.rows[0],
         });
     } catch (error) {
@@ -82,7 +83,8 @@ export async function handleAddDoctor(req, res) {
         });
     }
 
-    res.status(200).render("adminRegisterDoctor");
+    adminRegisterDoctor(req, res);
+    // res.status(200).render("adminRegisterDoctor");
 }
 
 export async function handleGetDoctorById(req, res) {
@@ -166,7 +168,7 @@ export async function handleUpdateDoctorById(req, res) {
         }
 
         const updatedUser = await pool.query(
-            "UPDATE users SET name = $1 WHERE id = $3 RETURNING *",
+            "UPDATE users SET name = $1 WHERE id = $2 RETURNING *",
             [name, doctor.rows[0].user_id]
         );
 

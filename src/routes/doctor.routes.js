@@ -10,6 +10,4 @@ router.get("/:doctorId", authMiddleware, handleGetDoctorById);
 router.post("/:doctorId", authMiddleware, handleUpdateDoctorById);
 router.delete("/:doctorId", authMiddleware, handleDeleteDoctorById);
 
-router.post("/admin/register-doctor", authMiddleware, adminRegisterDoctor);
-
 export default router;  

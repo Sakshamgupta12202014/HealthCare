@@ -80,7 +80,8 @@ export async function handleAddPatient(req, res) {
         });
     }
 
-    res.status(200).render("adminRegisterPatient");
+    adminRegisterPatient(req, res);
+    // res.status(200).render("adminRegisterPatient");
 }
 
 export async function handleGetPatientById(req, res) {
@@ -121,7 +122,7 @@ export async function handleGetPatientById(req, res) {
         }
 
         return res.status(200).json({
-            patient: { ...patient.rows[0], ...allDetails.rows[0] },
+            patient: [{ ...patient.rows[0] }, { ...allDetails.rows[0] }],
         });
     } catch (error) {
         console.error("Error in registerUser:", error);
@@ -135,7 +136,7 @@ export async function handleUpdatePatientById(req, res) {
         if (user.role !== "admin" && user.role !== "patient") {
             return res.status(403).json({
                 message:
-                    "Only admin or the patient himself can delete patient records",
+                    "Only admin or the patient himself can update patient records",
             });
         }
 
@@ -166,7 +167,7 @@ export async function handleUpdatePatientById(req, res) {
         }
 
         const updatedUser = await pool.query(
-            "UPDATE users SET name = $1 WHERE id = $3 RETURNING *",
+            "UPDATE users SET name = $1 WHERE id = $2 RETURNING *",
             [name, patient.rows[0].user_id]
         );
 
@@ -179,7 +180,7 @@ export async function handleUpdatePatientById(req, res) {
         });
     } catch (error) {
         console.error("Error in Updating user:", error);
-        res.status(500).json({ message: "Error in Updating user:" });
+        res.status(500).json({ message: "Error in Updating user:", error });
     }
 }
 

@@ -83,10 +83,186 @@ export async function handleAddPatient(req, res) {
     res.status(200).render("adminRegisterPatient");
 }
 
-export async function handleDeletePatientById(req, res) {}
+export async function handleGetPatientById(req, res) {
+    try {
+        const user = req?.user;
 
-export async function handleGetAllPatients(req, res) {}
+        if (user.role !== "admin" && user.role !== "patient") {
+            return res.status(403).json({
+                message:
+                    "Only admin or the patient himself can delete patient records",
+            });
+        }
 
-export async function handleGetPatientById(req, res) {}
+        const patientId = req?.params?.patientId;
 
-export async function handleUpdatePatientById(req, res) {}
+        // check in db
+        const patient = await pool.query(
+            "SELECT * FROM patients WHERE id = $1",
+            [patientId]
+        );
+
+        if (!(patient?.rows?.length > 0)) {
+            return res.status(400).json({
+                message: `Cannot find patient with patient id: ${patientId}`,
+            });
+        }
+
+        // grab all details
+        const allDetails = await pool.query(
+            "SELECT * FROM users WHERE id = $1",
+            [patient.rows[0].user_id]
+        );
+
+        if (!(allDetails?.rows?.length > 0)) {
+            return res.status(400).json({
+                message: `Cannot find user with user_id: ${patient.rows[0].user_id}`,
+            });
+        }
+
+        return res.status(200).json({
+            patient: { ...patient.rows[0], ...allDetails.rows[0] },
+        });
+    } catch (error) {
+        console.error("Error in registerUser:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function handleUpdatePatientById(req, res) {
+    try {
+        const user = req?.user;
+        if (user.role !== "admin" && user.role !== "patient") {
+            return res.status(403).json({
+                message:
+                    "Only admin or the patient himself can delete patient records",
+            });
+        }
+
+        const patientId = req?.params?.patientId;
+        const { name, age, gender } = req?.body;
+
+        // check in db
+        const patient = await pool.query(
+            "SELECT * FROM patients WHERE id = $1",
+            [patientId]
+        );
+
+        if (!(patient?.rows?.length > 0)) {
+            return res.status(400).json({
+                message: `Cannot find patient with patient id: ${patientId}`,
+            });
+        }
+
+        const updatedPatient = await pool.query(
+            "UPDATE patients SET age = $1, gender = $2 WHERE id = $3 RETURNING *",
+            [age, gender, patientId]
+        );
+
+        if (!(updatedPatient?.rows?.length > 0)) {
+            return res.status(500).json({
+                message: `Something went wrong while updating the patient id: ${patientId}`,
+            });
+        }
+
+        const updatedUser = await pool.query(
+            "UPDATE users SET name = $1 WHERE id = $3 RETURNING *",
+            [name, patient.rows[0].user_id]
+        );
+
+        return res.status(200).json({
+            patient: [
+                { message: "Patient details updated successfully" },
+                { ...updatedPatient.rows[0] },
+                { ...updatedUser.rows[0] },
+            ],
+        });
+    } catch (error) {
+        console.error("Error in Updating user:", error);
+        res.status(500).json({ message: "Error in Updating user:" });
+    }
+}
+
+export async function handleDeletePatientById(req, res) {
+    try {
+        const user = req?.user;
+
+        if (user.role !== "admin" && user.role !== "patient") {
+            return res.status(403).json({
+                message:
+                    "Only admin or the patient himself can delete patient records",
+            });
+        }
+
+        const patientId = req?.params?.patientId;
+
+        // check in db
+        const patient = await pool.query(
+            "SELECT * FROM patients WHERE id = $1",
+            [patientId]
+        );
+
+        if (!(patient?.rows?.length > 0)) {
+            return res.status(400).json({
+                message: `Cannot find patient with patient id: ${patientId}`,
+            });
+        }
+
+        const deletedPatient = await pool.query(
+            "DELETE FROM patients WHERE id = $1 RETURNING *",
+            [patientId]
+        );
+
+        if (!(deletedPatient?.rows?.length > 0)) {
+            return res.status(500).json({
+                message: `Something went wrong while deleting the patient id: ${patientId}`,
+            });
+        }
+
+        const deletedUser = await pool.query(
+            "DELETE FROM users WHERE id = $1 RETURNING *",
+            [patient.rows[0].user_id]
+        );
+
+        if (!(deletedUser?.rows?.length > 0)) {
+            return res.status(500).json({
+                message: `Something went wrong while deleting the user id: ${patient.rows[0].user_id}`,
+            });
+        }
+
+        return res.status(200).json({
+            patient: [
+                { message: "Patient removed successfully" },
+                { ...deletedPatient.rows[0] },
+                { ...deletedUser.rows[0] },
+            ],
+        });
+    } catch (error) {
+        console.error("Error in handleDeletePatientById:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}
+
+export async function handleGetAllPatients(req, res) {
+    try {
+        const user = req?.user;
+
+        // only admin can fetch all patients
+        if (user.role !== "admin") {
+            return res.status(403).json({
+                message: "Only admin can view all patients",
+            });
+        }
+
+        // get all patients
+        const patients = await pool.query("SELECT * FROM patients");
+
+        return res.status(200).json({
+            message: "Patients fetched successfully",
+            patients: patients.rows,
+        });
+    } catch (error) {
+        console.error("Error in handleGetAllPatients:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+}

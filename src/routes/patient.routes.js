@@ -4,7 +4,7 @@ import { handleAddPatient, handleDeletePatientById, handleGetAllPatients, handle
 
 const router = Router();
 
-router.get("/", authMiddleware, handleAddPatient);  // admin only
+router.post("/", authMiddleware, handleAddPatient);  // admin only
 router.get("/", authMiddleware, handleGetAllPatients); // admin only
 router.get("/:patientId", authMiddleware, handleGetPatientById); // admin and the patient himself
 router.post("/:patientId", authMiddleware, handleUpdatePatientById);  // admin and the patient himself

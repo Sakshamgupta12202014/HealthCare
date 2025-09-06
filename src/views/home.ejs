@@ -6,5 +6,9 @@
 <body>
     <h1>Welcome to the Home Page!</h1>
     <p>User: <%= user.email %> role: <%= user.role %> </p>
+    <form action="/api/auth/logout" method="GET">
+        <button type="submit">logout <%= user.role %></button>
+    </form>
+
 </body>
 </html>

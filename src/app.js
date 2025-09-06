@@ -26,7 +26,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));  // <-- point to src/views
 
 // View routes
-app.get("/", authMiddleware,  (req, res) => res.render("home"));
+app.get("/", authMiddleware,  (req, res) => res.render("home", { user: req.user }));
 app.get("/signup", (req, res) => res.render("Signup"));
 app.get("/signin", (req, res) => res.render("Signin"));
 

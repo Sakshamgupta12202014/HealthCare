@@ -1,12 +1,15 @@
 import { Router } from "express";
 import authMiddleware from "../middlewares/auth.middleware.js";
+import { handleAddPatient, handleDeletePatientById, handleGetAllPatients, handleGetPatientById, handleUpdatePatientById, adminRegisterPatient } from "../controllers/patient.controller.js";
 
 const router = Router();
 
-// router.post("/", authMiddleware, handleAddPatient);  // admin only
-// router.get("/", authMiddleware, handleGetAllPatients); // admin only
-// router.get("/:patientId", authMiddleware, handleGetPatientById); // admin and the patient himself
-// router.post("/:patientId", authMiddleware, handleUpdatePatientById);  // admin and the patient himself
-// router.delete("/:patientId", authMiddleware, handleDeletePatientById);  // admin and the patient himself
+router.get("/", authMiddleware, handleAddPatient);  // admin only
+router.get("/", authMiddleware, handleGetAllPatients); // admin only
+router.get("/:patientId", authMiddleware, handleGetPatientById); // admin and the patient himself
+router.post("/:patientId", authMiddleware, handleUpdatePatientById);  // admin and the patient himself
+router.delete("/:patientId", authMiddleware, handleDeletePatientById);  // admin and the patient himself
+
+router.post("/admin/register-patient", authMiddleware, adminRegisterPatient);
 
 export default router;

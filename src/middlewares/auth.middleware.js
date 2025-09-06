@@ -8,7 +8,7 @@ export function setUser(user) {
             email: user.email,
             role: user.role,
         },
-        process.env.TOKEN_SECRET,
+        process.env.TOKEN_SECRET
     );
 }
 
@@ -22,8 +22,6 @@ export function getUser(token) {
         // throw new ApiError(401, "Invalid Token. Please login again.");
     }
 }
-
-
 
 async function authMiddleware(req, res, next) {
     const token = req.cookies?.uid; // token is stored in cookies with key 'uid'

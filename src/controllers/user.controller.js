@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 
 export const registerUser = async (req, res) => {
     try {
-        if(!req.body){
+        if (!req.body) {
             return res.status(400).json({ message: "Request body is missing" });
         }
         console.log("Request Body:", req.body);
@@ -43,6 +43,13 @@ export const registerUser = async (req, res) => {
                 message: "Something went wrong while registering user",
             });
         }
+
+        // check if token is present
+        // const token = res.cookies?.uid;
+        // if(token){
+        //     const loggedInUser = getUser(token);
+
+        // }
 
         // user registeration successfull
         res.render("Signin", { email, role });
@@ -103,3 +110,14 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
+
+export async function logoutUser(req, res) {
+    if (!req.cookies?.uid)
+        return res.status(400).json({ message: "cannot logout" });
+
+    res.clearCookie("uid", {
+        sameSite: "None",
+        secure: true,
+    });
+    return res.status(200).render("Signin");
+}

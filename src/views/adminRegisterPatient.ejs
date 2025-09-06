@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <div class="signup-container">
+            <div class="signup-box">
+            <h2>Register Patient (Admin only)</h2>
+
+            <form action="/api/patients/admin/register-patient" method="POST">
+                <input name="name" type="text" placeholder="patient name..." />
+                <input name="email" type="email" placeholder="patient email..." />
+                <input name="password" type="password" placeholder="password..." />
+                <input name="age" type="number" placeholder="patient age..." />
+                <input name="gender" type="text" placeholder="patient gender..." />
+                <input name="medical_history" type="text" placeholder="patient disease..." />
+
+                <button type="submit">Register Patient</button>
+            </form>
+      </div>
+    </div>
+</body>
+</html>

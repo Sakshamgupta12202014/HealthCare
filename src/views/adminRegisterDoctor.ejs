@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+        <div >
+            <div >
+            <h2>Register Doctor (Admin only)</h2>
+
+            <form action="/api/doctors/admin/register-doctor" method="POST">
+                <input name="name" type="text" placeholder="doctor name..." />
+                <input name="email" type="email" placeholder="doctor email..." />
+                <input name="password" type="password" placeholder="password..." />
+                <input name="specialization" type="text" placeholder="specialization..." />
+                <input name="experience_years" type="text" placeholder="experience..." />
+
+                <button type="submit">Register Doctor</button>
+            </form>
+      </div>
+    </div>
+</body>
+</html>
